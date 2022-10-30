@@ -3,12 +3,12 @@
 KEY = "API-KEY"
 
 templates = [
-        f"""génère une introduction d'article de blog sans titres  pour le titre '{the_title}' en Français de minimum 100 mots et maximum 200 mots.
+        """génère une introduction d'article de blog sans titres  pour le titre '{}' en Français de minimum 100 mots et maximum 200 mots.
         Ne pas ajouter de titres.
         Faire qu'un seul paragraphe.
         Finir la génération par un point.""",
-        f"Génère plusieurs paragraphes d'article de blog pour le sous titre {sous_titre} en Français de minimum 100 mots et maximum 400 mots. Ajoute une liste à puce entre 2 paragraphes. Fini la génération après les point d'une phrase. Ne fais pas de titres.",
-        f"""génère une conclusion d'article de blog avec un titre h2 pour le titre '{the_title}' en Français. Ajoute un titre de conclusion au début de la génération.
+        "Génère plusieurs paragraphes d'article de blog pour le sous titre '{}' en Français de minimum 100 mots et maximum 400 mots. Ajoute une liste à puce entre 2 paragraphes. Fini la génération après les point d'une phrase. Ne fais pas de titres.",
+        """génère une conclusion d'article de blog avec un titre h2 pour le titre '{}' en Français. Ajoute un titre de conclusion au début de la génération.
         Finir la génération par un point.
         """
     ]

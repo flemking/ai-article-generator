@@ -26,7 +26,7 @@ def get_title_and_subtitle(mc):
     if suggestion != []:
         the_title = suggestion[0]
     else:
-        the_title = mot_cle
+        the_title = mc
     test = get_related_questions(the_title  + ' ')
     questions += test
         
