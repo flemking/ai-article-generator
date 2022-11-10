@@ -7,6 +7,7 @@ import openai
 import config
 
 from suggestions import get_title
+from youtube_videos_finder import found_vid
 from datetime import datetime
 import time
 
@@ -23,7 +24,7 @@ def get_title_and_subtitle(mc):
     print("Mot cle: ", mc, '\n')
     suggestion = get_title(str(mc))
     print("Les suggestions de Google: ", suggestion, '\n')
-    if suggestion != []:
+    if suggestion != [] and config.suggestions_google == True:
         the_title = suggestion[0]
     else:
         the_title = mc
@@ -82,13 +83,30 @@ def write_article(the_title, final_questions):
                                                 frequency_penalty=0,
                                                 presence_penalty=0
                                                 )
-        paragraphs += f'\n<h2>{sous_titre.upper()}</h2>\n' + response_article.choices[0].text + '\n'                             
+
+        sous_titre_image = openai.Image.create(
+        prompt=sous_titre,
+        n=1,
+        size="1024x1024"
+        )
+
+        paragraphs += sous_titre_image['data'][0]['url'] + '\n' + f'\n<h2>{sous_titre.upper()}</h2>\n' + response_article.choices[0].text + '\n'
+
+    featured_image = openai.Image.create(
+    prompt=the_title,
+    n=1,
+    size="1024x1024"
+    )
+
+    video_yt = found_vid(the_title)
+    print(video_yt)
 
     # print("\n", f"<h1>{the_title}</h1>", "\n")
     # print("\n", response_intro.choices[0].text)
     # print("\n", paragraphs)
     # print(f"\n <h2>CONCLUSION</h2>\n", response_conclusion.choices[0].text)
     return f"""
+    {featured_image['data'][0]['url']}
     \n<h1>{the_title}</h1>
     \n{response_intro.choices[0].text}
     \n{paragraphs}
