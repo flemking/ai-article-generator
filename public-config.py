@@ -44,3 +44,5 @@ new_mc=["quelle somme d'argent peut-on donner sans déclarer ?",
 ]
 
 model = "text-curie-001"
+
+suggestions_google = True
