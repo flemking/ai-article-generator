@@ -30,10 +30,6 @@ def get_title_and_subtitle(mc):
         the_title = mc
     test = get_related_questions(the_title  + ' ')
     questions += test
-        
-    # uncomment if using many keywords
-    #questions = list(set(questions))
-    #print(questions)
 
     # fix the questions strings
     for question in questions:
@@ -56,7 +52,7 @@ def write_article(the_title, final_questions):
     sous_titre = ''
 
     response_intro = openai.Completion.create(model=config.model,
-                                            prompt=f"{config.templates[0].format(the_title)}",
+                                            prompt=f"{config.template_intro.format(the_title)}",
                                             temperature=0.7,
                                             max_tokens=500,
                                             top_p=1,
@@ -64,7 +60,7 @@ def write_article(the_title, final_questions):
                                             presence_penalty=0
                                             )
     response_conclusion = openai.Completion.create(model=config.model,
-                                                prompt=f"{config.templates[2].format(the_title)}",
+                                                prompt=f"{config.template_conclusion.format(the_title)}",
                                                 temperature=0.7,
                                                 max_tokens=500,
                                                 top_p=1,
@@ -76,7 +72,7 @@ def write_article(the_title, final_questions):
     for i in final_questions:
         sous_titre = i
         response_article = openai.Completion.create(model=config.model,
-                                                prompt=f"{config.templates[1].format(sous_titre)}",
+                                                prompt=f"{config.template_chapitres.format(sous_titre)}",
                                                 temperature=0.7,
                                                 max_tokens=500,
                                                 top_p=1,
@@ -87,7 +83,7 @@ def write_article(the_title, final_questions):
         sous_titre_image = openai.Image.create(
         prompt=sous_titre,
         n=1,
-        size="1024x1024"
+        size="512x512"
         )
 
         paragraphs += sous_titre_image['data'][0]['url'] + '\n' + f'\n<h2>{sous_titre.upper()}</h2>\n' + response_article.choices[0].text + '\n'
@@ -98,16 +94,13 @@ def write_article(the_title, final_questions):
     size="1024x1024"
     )
 
-    video_yt = found_vid(the_title)
-    print(video_yt)
+    # Video youtube generer
+    video_iframe = found_vid(the_title)
 
-    # print("\n", f"<h1>{the_title}</h1>", "\n")
-    # print("\n", response_intro.choices[0].text)
-    # print("\n", paragraphs)
-    # print(f"\n <h2>CONCLUSION</h2>\n", response_conclusion.choices[0].text)
     return f"""
     {featured_image['data'][0]['url']}
     \n<h1>{the_title}</h1>
+    \n{video_iframe}
     \n{response_intro.choices[0].text}
     \n{paragraphs}
     \n<h2>CONCLUSION</h2>\n {response_conclusion.choices[0].text}
@@ -118,7 +111,7 @@ def write_article(the_title, final_questions):
 end = time.time()
 
 if __name__ == "__main__":
-    for mc in config.new_mc:
+    for mc in config.mot_cles:
         the_title, final_questions = get_title_and_subtitle(mc)
         output = write_article(the_title, final_questions)
         currentDateTime = datetime.now().strftime("%Y%m%d-%H%M%S")

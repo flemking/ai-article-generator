@@ -2,21 +2,19 @@
 
 KEY = "API-KEY"
 
-templates = [
-        """génère une introduction d'article de blog sans titres  pour le titre '{}' en Français de minimum 100 mots et maximum 200 mots.
+template_intro = """génère une introduction d'article de blog sans titres  pour le titre '{}' en Français de minimum 100 mots et maximum 200 mots.
         Ne pas ajouter de titres.
         Faire qu'un seul paragraphe.
-        Finir la génération par un point.""",
-        "Génère plusieurs paragraphes d'article de blog pour le sous titre '{}' en Français de minimum 100 mots et maximum 400 mots. Ajoute une liste à puce entre 2 paragraphes. Fini la génération après les point d'une phrase. Ne fais pas de titres.",
-        """génère une conclusion d'article de blog avec un titre h2 pour le titre '{}' en Français. Ajoute un titre de conclusion au début de la génération.
-        Finir la génération par un point.
-        """
-    ]
-
-new_mc=["quelle somme d'argent peut-on donner sans déclarer ?",
+        Finir la génération par un point."""
+template_chapitres = "Génère plusieurs paragraphes d'article de blog pour le sous titre '{}' en Français de minimum 100 mots et maximum 400 mots. Ajoute une liste à puce entre 2 paragraphes. Fini la génération après les point d'une phrase. Ne fais pas de titres."
+template_conclusion = """génère une conclusion d'article de blog avec un titre h2 pour le titre '{}' en Français. Ajoute un titre de conclusion au début de la génération.
+                    Finir la génération par un point.
+                    """
+mot_cles =[
+# "quelle somme d'argent peut-on donner sans déclarer ?",
 # "comment mettre de l'argent sur Paypal avec ou sans carte bancaire ?",
 # "comment investir son argent quand on est jeune ?",
-# "PME : pensez à centralisez vos données d'entreprise",
+"PME : pensez à centralisez vos données d'entreprise",
 # "quels sont les effets de la fleur de CBD sur la santé",
 # "Devenir Sauveteur Secouriste du Travail : nos 3 conseils d'experts",
 # "terre de diatomée punaise de lit comment utiliser",
@@ -43,6 +41,6 @@ new_mc=["quelle somme d'argent peut-on donner sans déclarer ?",
 # "mal au téton quand j'appuie"
 ]
 
-model = "text-curie-001"
+model = "text-davinci-002"
 
 suggestions_google = True
