@@ -1,0 +1,63 @@
+{% extends 'generator/base.html' %}
+{% block style %}
+<style>
+    div > span {
+        display: none;
+    }
+</style>
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+{% block h1 %} <span>Text Generator</span> {% endblock %}
+<div class="mx-auto w-full max-w-2xl">
+    <form class="bg-slate-200 shadow-md px-8 pt-6 pb-8 mb-4" action="/upload/" method="POST" enctype="multipart/form-data"> 
+        {% csrf_token %}
+        <label class="block text-gray-700 text-sm font-bold mt-3 mb-1" for="mots_cles">Mot Cles</label>
+            <p class="text-gray-500 text-xs font-bold leading-3 my-1">Un mot clé par ligne</p>
+            <textarea class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" name="mots_cles" id="" rows="7" required></textarea>
+        <br>
+        <label class="block text-gray-700 text-sm font-bold mt-3 mb-1" for="template_intro">Template Intro</label>
+            <p class="text-gray-500 text-xs font-bold leading-3 my-1">Info: {} sera remplacer par le titre/mot clé du texte</p>
+            <textarea class="text-xs shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" name="template_intro" id="" rows="4" required>{{template.intro}}</textarea>
+        <br>
+        <label class="block text-gray-700 text-sm font-bold mt-3 mb-1" for="template_chapitres">Template Chapitres</label>
+            <p class="text-gray-500 text-xs font-bold leading-3 my-1">Info: {} sera remplacer par le titre/mot clé du texte</p>
+            <textarea class="text-xs shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" name="template_chapitres" id="" rows="4" required>{{template.chapitres}}</textarea>
+        <br>
+        <label class="block text-gray-700 text-sm font-bold mt-3 mb-1" for="template_conclusion">Template Conclusion</label>
+            <p class="text-gray-500 text-xs font-bold leading-3 my-1">Info: {} sera remplacer par le titre/mot clé du texte</p>
+            <textarea class="text-xs shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" name="template_conclusion" id="" rows="4" required>{{template.conclusion}}</textarea>
+        <br>
+        {% comment %} + code {% endcomment %}
+        <label class="text-gray-700 text-sm font-bold mt-3 mb-1 px-2" for="google_check">Suggestions google</label>
+        <input type='checkbox' name="google_check"/>
+        <br>
+        <label class="text-gray-700 text-sm font-bold mt-3 mb-1 px-2" for="h3_check">Ajouter les h3</label>
+        <input type='checkbox' name="h3_check"/>
+        {% comment %} end code {% endcomment %}
+        <div class="flex items-center justify-end">
+            <button class="bg-green-500 my-5 px-5 py-2 rounded text-white mr-0" type="submit" name="submit" value="submit">Valider</button> 
+        </div> 
+    </form>
+</div>
+<div class="mx-auto w-full bg-gray-900 shadow-md px-8 pt-6 pb-8 mb-4">
+    {% if images %}
+    <h2 class="text-lg font-bold">Check last files</h2>
+    <ul>
+	{% for image in images reversed %}
+		<li><a class="text-blue-400" href="{{ MEDIA_URL }}media/articles/{{ image }}">{{ image }}</a></li>
+		{% comment %} <li><a class="text-blue-400" href="{% url 'download' filename='{{ image }}' %}">{{ image }}</a></li> {% endcomment %}
+	{% endfor %}
+    </ul>
+    {% else %}
+        <p>No articles available.</p>
+    {% endif %}
+</div>
+{% else %}
+{% block title %}<span>Please Login</span>{% endblock %}
+<div class="text-center mx-auto w-full max-w-md bg-gray-100 shadow-md rounded px-8 py-6">
+    <p class="block text-gray-700 text-xl font-bold mb-10">You are not logged in | Please Log in</p>
+    <a class="bg-green-500 px-5 py-2 rounded text-white" href="{% url 'login' %}">Log In</a>
+</div>
+{% endif %}
+{% endblock %}

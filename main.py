@@ -5,6 +5,8 @@ import re
 
 import openai
 import config
+import requests
+from urllib import parse
 
 from suggestions import get_title
 from youtube_videos_finder import found_vid
@@ -85,8 +87,19 @@ def write_article(the_title, final_questions):
         n=1,
         size="512x512"
         )
+        #downloading the images
+        image = parse.quote_plus(f'{the_title}_{sous_titre}_image.jpg')
+        image_path = parse.quote(image)
+        with open(f"images/{image}", 'wb') as handle:
+            response = requests.get(sous_titre_image['data'][0]['url'], stream=True)
+            if not response.ok:
+                print(response)
+            for block in response.iter_content(1024):
+                if not block:
+                    break
+                handle.write(block)
 
-        paragraphs += sous_titre_image['data'][0]['url'] + '\n' + f'\n<h2>{sous_titre.upper()}</h2>\n' + response_article.choices[0].text + '\n'
+        paragraphs += "\n<br/>" + f"<br/><img src='../images/{image_path}' />" + "\n" + f"\n<h2>{sous_titre.upper()}</h2>\n<br/>" + response_article.choices[0].text + "\n<br/>"
 
     featured_image = openai.Image.create(
     prompt=the_title,
@@ -94,15 +107,27 @@ def write_article(the_title, final_questions):
     size="1024x1024"
     )
 
+    #downloading the images
+    image = parse.quote_plus(f'{the_title}.jpg')
+    image_path = parse.quote(image)
+    with open(f"images/{image}", 'wb') as handle:
+        response = requests.get(featured_image['data'][0]['url'], stream=True)
+        if not response.ok:
+            print(response)
+        for block in response.iter_content(1024):
+            if not block:
+                break
+            handle.write(block)
+
     # Video youtube generer
     video_iframe = found_vid(the_title)
 
     return f"""
-    {featured_image['data'][0]['url']}
-    \n<h1>{the_title}</h1>
+    <img src='../images/{image_path}' />
+    \n<h1>{the_title.upper()}</h1>
     \n{video_iframe}
-    \n{response_intro.choices[0].text}
-    \n{paragraphs}
+    \n<br/>{response_intro.choices[0].text}
+    \n<br/>{paragraphs}
     \n<h2>CONCLUSION</h2>\n {response_conclusion.choices[0].text}
     """
 
@@ -115,7 +140,7 @@ if __name__ == "__main__":
         the_title, final_questions = get_title_and_subtitle(mc)
         output = write_article(the_title, final_questions)
         currentDateTime = datetime.now().strftime("%Y%m%d-%H%M%S")
-        path = f"articles/{the_title}-{currentDateTime}.txt"
+        path = f"articles/{the_title}-{currentDateTime}.html"
         with open(path, "w") as txt:
             txt.write(output)
     print(f"\nLe script a pris: {end-start}s")
