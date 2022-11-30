@@ -1,5 +1,5 @@
-# KEY = "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"
-KEY = "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"
+# KEY = ""
+KEY = ""
 
 # template_intro = """génère une introduction d'article de blog sans titres  pour le titre '{}' en Français de minimum 100 mots et maximum 200 mots.
 #         Ne pas ajouter de titres.
